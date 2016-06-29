@@ -5,7 +5,12 @@ setting() {
     value="${2}"
     file="${3}"
     if [ -n "${value}" ]; then
-        sed --in-place "s|.*${setting}=.*|${setting}=${value}|" conf/"${file}"
+        grep -q ".*${setting}=" conf/"${file}"
+        if [ $? -eq 0 ] ; then
+            sed --in-place "s|.*${setting}=.*|${setting}=${value}|" conf/"${file}"
+        else
+            echo "${setting}=${value}" >> conf/"${file}"
+        fi
     fi
 }
 
